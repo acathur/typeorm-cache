@@ -1,0 +1,29 @@
+{
+  "name": "typeorm-cache",
+  "version": "1.0.1",
+  "description": "A typeorm cache provider based on keyv.",
+  "main": "./lib",
+  "types": "./lib/index.d.ts",
+  "keywords": [
+    "typeorm",
+    "cache",
+    "keyv",
+    "memory"
+  ],
+  "repository": "https://github.com/acathur/typeorm-cache.git",
+  "author": "Acathur <chiahungzhang@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "build": "rm -rf dist && tsc"
+  },
+  "peerDependencies": {
+    "keyv": "^4.0.0",
+    "typeorm": "^0.2.0"
+  },
+  "devDependencies": {
+    "@types/keyv": "^3.1.1",
+    "@types/node": "^14.14.31",
+    "typeorm": "^0.2.31",
+    "typescript": "^4.1.3"
+  }
+}

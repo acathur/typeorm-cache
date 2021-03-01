@@ -2,9 +2,13 @@ import Keyv from 'keyv';
 import { QueryRunner } from 'typeorm';
 import { QueryResultCache } from 'typeorm/cache/QueryResultCache';
 import { QueryResultCacheOptions } from 'typeorm/cache/QueryResultCacheOptions';
+export interface KeyvCacheProviderOptions extends Keyv.Options<any> {
+    keyPrefix?: string;
+}
 export declare class KeyvCacheProvider implements QueryResultCache {
     cache: Keyv;
-    constructor(opts?: Keyv.Options<any>);
+    keyPrefix: string;
+    constructor(opts?: KeyvCacheProviderOptions);
     private generateIdentifier;
     connect(): Promise<void>;
     disconnect(): Promise<void>;

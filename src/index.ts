@@ -4,15 +4,22 @@ import { QueryRunner } from 'typeorm'
 import { QueryResultCache } from 'typeorm/cache/QueryResultCache'
 import { QueryResultCacheOptions } from 'typeorm/cache/QueryResultCacheOptions'
 
+export interface KeyvCacheProviderOptions extends Keyv.Options<any> {
+  keyPrefix?: string
+}
+
 export class KeyvCacheProvider implements QueryResultCache {
   cache: Keyv
+  keyPrefix: string
 
-  constructor(opts?: Keyv.Options<any>) {
+  constructor(opts?: KeyvCacheProviderOptions) {
+    const { keyPrefix } = opts || {}
     this.cache = new Keyv(opts)
+    this.keyPrefix = keyPrefix || 'typeorm:cache:'
   }
 
   private generateIdentifier(query: string) {
-    return query && createHash('md5').update(query).digest('hex')
+    return query && `${this.keyPrefix}${createHash('md5').update(query).digest('hex')}`
   }
 
   /**

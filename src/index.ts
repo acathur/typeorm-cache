@@ -13,7 +13,7 @@ export class KeyvCacheProvider implements QueryResultCache {
   keyPrefix: string
 
   constructor(opts?: KeyvCacheProviderOptions) {
-    const { keyPrefix } = opts || {}
+    const { keyPrefix } = typeof opts === 'object' && opts || {}
     this.cache = new Keyv(opts)
     this.keyPrefix = keyPrefix || 'typeorm:cache:'
   }

@@ -1,6 +1,6 @@
 {
   "name": "typeorm-cache",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A typeorm cache provider based on keyv.",
   "main": "./lib",
   "types": "./lib/index.d.ts",

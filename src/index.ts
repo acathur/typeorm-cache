@@ -5,6 +5,9 @@ import { QueryResultCache } from 'typeorm/cache/QueryResultCache'
 import { QueryResultCacheOptions } from 'typeorm/cache/QueryResultCacheOptions'
 
 export interface KeyvCacheProviderOptions extends Keyv.Options<any> {
+  /**
+   * @deprecated
+   */
   keyPrefix?: string
 }
 
@@ -12,14 +15,15 @@ export class KeyvCacheProvider implements QueryResultCache {
   cache: Keyv
   keyPrefix: string
 
-  constructor(opts?: KeyvCacheProviderOptions) {
-    const { keyPrefix } = typeof opts === 'object' && opts || {}
-    this.cache = new Keyv(opts)
-    this.keyPrefix = keyPrefix || 'typeorm:cache:'
+  constructor(opts?: KeyvCacheProviderOptions | string) {
+    opts = typeof opts === 'object' ? opts : typeof opts === 'string' ? { uri: opts } : {}
+    const namespace = opts.namespace || opts.keyPrefix || 'typeorm:cache'
+    this.cache = new Keyv({ ...opts, namespace })
+    this.keyPrefix = opts.uri ? '' : namespace + ':'
   }
 
   private generateIdentifier(query: string) {
-    return query && `${this.keyPrefix}${createHash('md5').update(query).digest('hex')}`
+    return query && `${createHash('md5').update(query).digest('hex')}`
   }
 
   /**
@@ -42,7 +46,7 @@ export class KeyvCacheProvider implements QueryResultCache {
    */
   async getFromCache(options: QueryResultCacheOptions, queryRunner?: QueryRunner): Promise<QueryResultCacheOptions | undefined> {
     const { identifier, query, duration } = options
-    const key = identifier || this.generateIdentifier(query)
+    const key = `${this.keyPrefix}${identifier || this.generateIdentifier(query)}`
     const result = await this.cache.get(key)
 
     return (
@@ -60,7 +64,7 @@ export class KeyvCacheProvider implements QueryResultCache {
    */
   async storeInCache(options: QueryResultCacheOptions, savedCache: QueryResultCacheOptions | undefined, queryRunner?: QueryRunner) {
     const { identifier, query, duration, result } = options
-    const key = identifier || this.generateIdentifier(query)
+    const key = `${this.keyPrefix}${identifier || this.generateIdentifier(query)}`
     await this.cache.set(key, result, duration)
   }
 

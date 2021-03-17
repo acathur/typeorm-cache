@@ -8,7 +8,7 @@ export interface KeyvCacheProviderOptions extends Keyv.Options<any> {
 export declare class KeyvCacheProvider implements QueryResultCache {
     cache: Keyv;
     keyPrefix: string;
-    constructor(opts?: KeyvCacheProviderOptions);
+    constructor(opts?: KeyvCacheProviderOptions | string);
     private generateIdentifier;
     connect(): Promise<void>;
     disconnect(): Promise<void>;
